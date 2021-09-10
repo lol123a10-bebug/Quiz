@@ -1,0 +1,10 @@
+.Quiz {
+  & > p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & strong {
+      font-size: 2rem;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+.QuizHeader {
+  p {
+    display: flex;
+    justify-content: space-between;
+    & strong {
+      font-size: 2rem;
+    }
+  }
+}
