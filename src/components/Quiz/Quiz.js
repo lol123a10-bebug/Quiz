@@ -9,6 +9,8 @@ import {
   startTimer,
   tick,
   quizState,
+  fullReset,
+  boardClicked,
 } from "../../store/quizSlice";
 
 import Question from "../Question/Question";
@@ -16,6 +18,7 @@ import Card from "../UI/Card";
 import classes from "./Quiz.module.scss";
 import QuizHeader from "./QuizHeader";
 import Leaderboard from "../Leaderboard/Leaderboard";
+import QuizButton from "./QuizButton";
 
 const Quiz = () => {
   const state = useSelector(quizState);
@@ -38,6 +41,7 @@ const Quiz = () => {
 
   const answerClickHandler = (isCorrect, id) => {
     const nextQuestion = currentCount + 1;
+
     dispatch(used(id));
 
     if (!state.isOn) {
@@ -57,35 +61,53 @@ const Quiz = () => {
     }
   };
 
-  const reset = () => {
-    dispatch(resetTimer());
+  const resetQuestionsHandler = () => {
     setCurrentCount(0);
     setShowScore(false);
   };
 
-  const curQ = state.questions[state.randomNumber];
+  const leaderboardButtonHandler = () => {
+    dispatch(boardClicked(true));
+    setShowScore(true);
+  };
 
-  let content = <Question quest={curQ} clicked={answerClickHandler} />;
+  const resetHandler = () => {
+    dispatch(resetTimer());
+    dispatch(boardClicked());
+    resetQuestionsHandler();
+  };
 
-  if (showScore) {
-    content = (
-      <Leaderboard
-        timer={state.timer}
-        score={state.score}
-        length={state.questionMaxLength}
-        reset={reset}
-      />
-    );
-  }
+  const fullResetHandler = () => {
+    dispatch(fullReset());
+    dispatch(boardClicked());
+    resetQuestionsHandler();
+  };
 
-  return (
-    <Card className={classes.Quiz}>
+  const quizButtonHandler = () => {
+    return showScore ? resetHandler() : leaderboardButtonHandler();
+  };
+
+  const currrentQuestion = state.questions[state.randomNumber];
+
+  let content = (
+    <>
       <QuizHeader
         timer={state.timer}
         length={state.questionMaxLength}
         current={currentCount}
       />
+      <Question quest={currrentQuestion} clicked={answerClickHandler} />
+    </>
+  );
+
+  if (showScore) {
+    content = <Leaderboard reset={resetHandler} fullReset={fullResetHandler} />;
+  }
+
+  return (
+    <Card className={classes.Quiz}>
       {content}
+      <QuizButton showScore={showScore} clicked={quizButtonHandler} />
     </Card>
   );
 };

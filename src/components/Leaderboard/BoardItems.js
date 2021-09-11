@@ -6,10 +6,18 @@ import classes from "./BoardItems.module.scss";
 const BoardItems = () => {
   const state = useSelector(quizState);
 
+  const recrods = [...state.records];
+  const recordsState = recrods.sort((a, b) => b.effectRatio - a.effectRatio);
+
   return (
     <ol className={classes.BoardItems}>
-      {state.records.map((record, index) => (
-        <BoardItem key={index} time={record.time} score={record.score} />
+      {recordsState.map((record, index) => (
+        <BoardItem
+          key={index}
+          effect={record.effectRatio}
+          time={record.time}
+          score={record.score}
+        />
       ))}
     </ol>
   );

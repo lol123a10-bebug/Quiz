@@ -1,4 +1,6 @@
 .BoardItems {
+  max-height: 8rem;
+  overflow-y: auto;
   & li {
     margin: 0.5rem 0;
   }

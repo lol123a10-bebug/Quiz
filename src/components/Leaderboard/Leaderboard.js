@@ -1,16 +1,30 @@
 import BoardItems from "./BoardItems";
 import Button from "../UI/Button";
+import { useSelector } from "react-redux";
+import { quizState } from "../../store/quizSlice";
+import classes from "./Leaderboard.module.scss";
 
 const Leaderboard = (props) => {
+  const state = useSelector(quizState);
+
   return (
-    <>
-      <p>
-        Your scored - {props.score} out of {props.length}
-      </p>
-      <p>Your time - {props.timer}</p>
+    <div className={classes.Leaderboard}>
+      {!state.boardBeforeStart && (
+        <>
+          <p>
+            Your scored - {state.score} out of {state.questionMaxLength}
+          </p>
+          <p>Your time - {state.timer}</p>
+        </>
+      )}
       <BoardItems />
-      <Button onClick={props.reset}>Try again</Button>
-    </>
+      <div className={classes.actions}>
+        {!state.boardBeforeStart && (
+          <Button onClick={props.reset}>Try again</Button>
+        )}
+        <Button onClick={props.fullReset}>Full Reset</Button>
+      </div>
+    </div>
   );
 };
 
